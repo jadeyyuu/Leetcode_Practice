@@ -1,6 +1,8 @@
 package CarlPractice;
 
 import java.util.*;
+import java.awt.*;
+import java.awt.List;
 
 class carlHashTable {
 	public static void main(String[] args) {
@@ -16,13 +18,17 @@ class carlHashTable {
 		int [] nums2 = {2,2};
 		
 		int [] result = intersection(nums1, nums2);
-		for (int i: result) {
-			System.out.println(i);	
-		}
+//		for (int i: result) {
+//			System.out.println(i);	
+//		}
+		
+		String s1 = "abccc", s2 = "aab";
+		boolean re = canConstruct(s1, s2);
 	}
 	
 	// 242. 有效的字母异位词
-	// 需要把字符映射到数组也就是哈希表的索引下标上，  因为字符a到字符z的ASCII是26个连续的数值，所以字符a映射为下标0，相应的字符z映射为下标25。
+	// Link: https://leetcode.cn/problems/valid-anagram/
+	// 需要把字符映射到数组也就是哈希表的索引下标上,因为字符a到字符z的ASCII是26个连续的数值，所以字符a映射为下标0，相应的字符z映射为下标25。
 	// 时间复杂度：O(n)，
 	// 空间复杂度：O(1)，空间上因为定义是的一个常量大小的辅助数组
 	public static boolean isAnagram(String s, String t) {
@@ -44,6 +50,7 @@ class carlHashTable {
 	}
 	
 	// 349. 两个数组的交集
+	// Link: https://leetcode.cn/problems/intersection-of-two-arrays/
 	// 1 <= nums1.length, nums2.length <= 1000
 	// 0 <= nums1[i], nums2[i] <= 1000
 	// 用数组: 数组都是1000以内
@@ -93,4 +100,152 @@ class carlHashTable {
 		//将结果几何转为数组
 		return result.stream().mapToInt(x -> x).toArray();
 	}
+	
+	
+	// 第202题. 快乐数
+	// Link: https://leetcode.cn/problems/happy-number/
+	
+	public boolean isHappy(int n) {
+		Set<Integer> record = new HashSet<>();
+		// 如果n出现则已陷入无限循环，return false；
+		while (n != 1 && !record.contains(n)) {
+			record.add(n);
+			n = getNextNumber(n);
+		}
+		return n == 1;
+	}
+	
+	public int getNextNumber(int n) {
+		int res = 0;
+		while (n > 0) {
+			int temp = n % 10; //个位数
+			res += temp * temp;
+			n = n /10;
+		}
+		return res;
+	}
+	
+	// 1. 两数之和
+	// Link：https://leetcode.cn/problems/two-sum/
+	// Notes: 
+	// 1.为什么会想到用哈希表? - 
+	// 2.哈希表为什么用map
+	// 3.本题map是用来存什么的
+	// 4.map中的key和value用来存什么的 - map中key用来存
+	public int[] twoSum(int[] nums, int target) {
+		// 初始化两位数的数组为最后的结果
+		// 首先考虑不合规的情况
+		int [] res = new int [2];
+		if (nums == null || nums.length == 0) {
+			return res;
+		}
+		
+		Map<Integer,Integer> map = new HashMap<>();
+		for (int i =0; i < nums.length; i++) {
+			int s = target - nums[i];
+			if (map.containsKey(s)){
+				res[1] = i;
+				res[0] = map.get(s);
+			}
+			map.put(nums[i], i);
+		}
+		return res;
+		
+	}
+	
+	
+	// 454. 四数相加 II
+	// Link: https://leetcode.cn/problems/4sum-ii/
+	public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+		Map<Integer,Integer> map = new HashMap<>();
+		int count = 0;
+		//统计前两个数组中的元素之和，同时统计出现的次数，放入map
+		for (int a: nums1) {
+			for (int b: nums2) {
+				int temp = a + b;
+				if (map.containsKey(temp)) {
+					map.put(temp, map.get(temp) + 1);
+				} else {
+					map.put(temp, 1);
+				}
+			}
+		}
+		for (int c: nums3) {
+			for (int d: nums4) {
+				int target = 0 - (c + d);
+				if (map.containsKey(target)) {
+					count += map.get(target);
+				}
+			}
+		}
+		return count;
+	}
+	
+	// 383. 赎金信
+	// Link: https://leetcode.cn/problems/ransom-note/submissions/
+	public static boolean canConstruct(String ransomNote, String magazine) {
+		int [] records = new int [26];
+		
+		for (char c: ransomNote.toCharArray()) {
+			records[c - 'a'] += 1;
+		}
+		
+		for (char c: magazine.toCharArray()) {
+			records[c - 'a'] -= 1;
+		}
+		
+		for (int i: records) {
+			if (i < 0) return false;
+		}
+		
+		return true;
+	}
+	
+	// 15. 三数之和
+	// Link: https://leetcode.cn/problems/3sum/
+	public List<List<Integer>> threeSum(int[] nums) {
+		List<List<Integer>> ans = new ArrayList<>();
+		Arrays.sort(nums);
+		// 找出a + b + c = 0
+		// a = nums[i], b = nums[left], c = nums[right]
+		for (int i; i < nums.length; i++) {
+			// 排序之后如果第一个元素已经大于零，那么无论如何组合都不可能凑成三元组，直接返回结果就可以了
+			if (nums[i] > 0) return ans;
+			
+			// 错误去重a方法，将会漏掉-1,-1,2 这种情况
+			/*
+			if (nums[i] == nums[i + 1]) continue;
+			*/
+			// 正确去重a方法
+			if (i > 0 && nums[i] == nums[i - 1]) {
+				continue;
+			}
+			
+			int left = i + 1;
+			int right = nums.length - 1;
+			
+			while (left < right) {
+				// 去重复逻辑如果放在这里，0，0，0 的情况，可能直接导致 right<=left 了，从而漏掉了 0,0,0 这种三元组
+				/*
+				while (right > left && nums[right] == nums[right - 1]) right--;
+				while (right > left && nums[left] == nums[left + 1]) left++;
+				*/
+				if (nums[i] + nums[left] + nums[right] > 0) right--;
+				else if (nums[i] + nums[left] + nums[right] < 0) left++;
+				else {
+					ans.add(Arrays.asList(nums[i], nums[left], nums[right]));
+					// 去重逻辑应该放在找到一个三元组之后，对b 和 c去重
+					while (right > left && nums[right] == nums[right - 1]) right--;
+					while (right > left && nums[left] == nums[left + 1]) left++;
+					
+					// 找到答案时，双指针同时收缩
+					right--;
+					left++;
+				}
+			}
+			
+		}
+		return ans;
+	}
+	
 } 
