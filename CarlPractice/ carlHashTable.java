@@ -1,8 +1,7 @@
 package CarlPractice;
-
-import java.util.*;
 import java.awt.*;
-import java.awt.List;
+import java.util.*;
+
 
 class carlHashTable {
 	public static void main(String[] args) {
@@ -46,6 +45,26 @@ class carlHashTable {
 			if (i != 0) {
 				return false;
 			}
+		return true;
+	}
+	
+	// 383. 赎金信
+	// Link: https://leetcode.cn/problems/ransom-note/submissions/
+	public static boolean canConstruct(String ransomNote, String magazine) {
+		int [] records = new int [26];
+		
+		for (char c: ransomNote.toCharArray()) {
+			records[c - 'a'] += 1;
+		}
+		
+		for (char c: magazine.toCharArray()) {
+			records[c - 'a'] -= 1;
+		}
+		
+		for (int i: records) {
+			if (i < 0) return false;
+		}
+		
 		return true;
 	}
 	
@@ -181,29 +200,11 @@ class carlHashTable {
 		return count;
 	}
 	
-	// 383. 赎金信
-	// Link: https://leetcode.cn/problems/ransom-note/submissions/
-	public static boolean canConstruct(String ransomNote, String magazine) {
-		int [] records = new int [26];
-		
-		for (char c: ransomNote.toCharArray()) {
-			records[c - 'a'] += 1;
-		}
-		
-		for (char c: magazine.toCharArray()) {
-			records[c - 'a'] -= 1;
-		}
-		
-		for (int i: records) {
-			if (i < 0) return false;
-		}
-		
-		return true;
-	}
+
 	
 	// 15. 三数之和
 	// Link: https://leetcode.cn/problems/3sum/
-	public List<List<Integer>> threeSum(int[] nums) {
+	public static List<List<Integer>> threeSum(int[] nums) {
 		List<List<Integer>> ans = new ArrayList<>();
 		Arrays.sort(nums);
 		// 找出a + b + c = 0
@@ -246,6 +247,57 @@ class carlHashTable {
 			
 		}
 		return ans;
+	}
+	
+	// 第18题. 四数之和
+	// Link: https://leetcode.cn/problems/4sum/
+	public List<List<Integer>> fourSum(int[] nums, int target) {
+		List<List<Integer>> result = new ArrayList<>(0);
+		Arrays.sort(nums);
+		
+		for (int i = 0; i < nums.length; i ++) {
+			
+			// nums[i] > target 直接返回, 剪枝操作
+			if (nums[i] > 0 && nums[i] > target) {
+				return result;
+			}
+			
+			// 对nums[k]去重
+			if (i > 0 && nums[i] == nums[i - 1]) {
+				continue;
+			}
+			
+			// 二级操作
+			for (int j = i + 1; j < nums.length; j ++) {
+				// 对nums[j]去重
+				if (j > i + 1 && nums[j - 1] == nums[j]) {
+					continue;
+				}
+				int left = j + 1;
+				int right = nums.length - 1;
+				while (right > left) {
+					// nums[k] + nums[i] + nums[left] + nums[right] > target 会溢出
+					long sum = (long) nums[i] + nums[j] + nums[left] + nums[right];
+					if (sum > target) {
+						right--;
+					} else if (sum < target) {
+						left++;
+					} else {
+						result.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
+						// 对nums[left]和nums[right]去重
+						while (right > left && nums[right] == nums[right - 1]) right--;
+						while (right > left && nums[left] == nums[left + 1]) left++;
+						
+						// 找到答案时，双指针同时收缩
+						left++;
+						right--;
+					}
+				}
+			}
+		}
+		
+		return result;
+		
 	}
 	
 } 
