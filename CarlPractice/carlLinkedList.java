@@ -1,8 +1,23 @@
 package CarlPractice;
 
 import java.awt.*;
+class carlLinkedList{
+	// 单链表的定义
+	//Definition for singly-linked list.
+	public static class ListNode {
+		int val;
+		ListNode next;
+		ListNode() {};
 
-class carlLinkedList {
+		ListNode (int val) {
+			this.val = val;
+		}
+
+		ListNode (int val, ListNode next) {
+			this.val = val;
+			this.next = next;
+		}
+	}
 	public static void main(String[] args) {
 		//1 --> 2 -->6 --> 3 --> 4 --> 5 --> 6}
 		ListNode head = new ListNode(1);
@@ -12,52 +27,44 @@ class carlLinkedList {
 		ListNode node4 = new ListNode(5);
 		ListNode node5 = new ListNode(5);
 		ListNode node6 = new ListNode(6);
-		
-//		head.next = node1;
-//		node1.next = node2;
-//		node2.next = node3;
-//		node3.next = node4;
-//		node4.next = node5;
-//		node5.next = node6;
-		
+
+		//		head.next = node1;
+		//		node1.next = node2;
+		//		node2.next = node3;
+		//		node3.next = node4;
+		//		node4.next = node5;
+		//		node5.next = node6;
+
 		// 203. 移除链表元素
-//		ListNode answer = removeElements(head, 6);
-		
+		//		ListNode answer = removeElements(head, 6);
+
 		// 24. 两两交换链表中的节点
-//		ListNode answer = swapPairs(head);
-		
+		//		ListNode answer = swapPairs(head);
+
 		// 19. 删除链表的倒数第 N 个结点
 		ListNode answer = removeNthFromEnd(head, 1);
-		
+
 		// Answer output
 		ListNode cur = answer;
 		while (cur != null) {
 			System.out.print(cur.val + ", ");
 			cur = cur.next;
 		}
+}
+
+	/**
+	 *
+	 * 	203. 移除链表元素
+	 * 	link: https://leetcode.cn/problems/remove-linked-list-elements/
+	 */
+	class test {
+
 
 		
 	}
 	
-	// 单链表的定义
-	//Definition for singly-linked list.
-	public static class ListNode {
-		int val;
-		ListNode next;
-		ListNode() {};
-		
-		ListNode (int val) {
-			this.val = val;
-		}
-		
-		ListNode (int val, ListNode next) {
-			this.val = val;
-			this.next = next;
-		}
-	}
-	
-	// 203. 移除链表元素
-	// link: https://leetcode.cn/problems/remove-linked-list-elements/
+
+
 	
 	/**
 	* 原链表删除元素
