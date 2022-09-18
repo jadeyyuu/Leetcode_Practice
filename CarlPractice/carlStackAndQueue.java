@@ -91,4 +91,34 @@ class MyStack {
     }
 }
 
+/**
+ * 20. 有效的括号
+ * Link: https://leetcode.cn/problems/valid-parentheses/
+ */
+class isValid20 {
+    public boolean isValid(String s) {
+        // 注意到有效字符串的长度一定为偶数，省去后续的遍历判断过程。
+        int n = s.length();
+        if (n % 2 == 1) return false;
+
+        // 新建一个双端队列函数，
+        // 既可以添加到队尾，也可以添加到队首；
+        // 既可以从队首获取，又可以从队尾获取。
+        Deque<Character> deque = new LinkedList<>();
+        for (char ch: s.toCharArray()) {
+            if (ch == '(') {
+                deque.push(')');
+            } else if (ch == '{') {
+                deque.push('}');
+            } else if (ch == '[') {
+                deque.push(']');
+            } else if (deque.isEmpty() || deque.peek() != ch) { // peek 取队首元素但不删除
+                return false;
+            } else{
+                deque.pop(); //如果是右括号判断是否和栈顶元素匹配
+            }
+        }
+        return deque.isEmpty();
+    }
+}
 
