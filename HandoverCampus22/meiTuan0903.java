@@ -95,3 +95,122 @@ class tree03 {
     }
 
 }
+
+// 0920 面试题
+/**
+ * 输入：head  = [1,2,3,4,5] k = 2, 输出：[4,5,1,2,3]
+ * 输入：head = [0,1,2], k = 4, 输出[2,0,1]
+ */
+class rotateRight {
+    public static void main(String[] args) {
+        //ex1
+        ListNode head1 = new ListNode(1);
+        ListNode node11 = new ListNode(2);
+        ListNode node12 = new ListNode(3);
+        ListNode node13 = new ListNode(4);
+        ListNode node14 = new ListNode(5);
+
+        head1.next = node11;
+        node11.next = node12;
+        node12.next = node13;
+        node13.next = node14;
+
+        //ex2
+        ListNode head2 = new ListNode(0);
+        ListNode node21 = new ListNode(1);
+        ListNode node22 = new ListNode(2);
+        head2.next = node21;
+        node21.next = node22;
+
+        // output
+        ListNode result = rotateRight(head2, 4);
+        while(result != null) {
+            System.out.println(result.val);
+            result = result.next;
+        }
+    }
+    // Wrong Answer
+    public static ListNode rotateRight(ListNode head, int k) {
+        ListNode pre = head;
+        ListNode cur = null;
+        int len = 1;
+
+        while (pre.next != null) {
+            pre = pre.next;
+            len ++;
+        }
+
+        pre.next = head;
+        int pos = len - k % len + 1;
+
+        while (pos-- > 0) {
+            pre = pre.next;
+        }
+
+        cur = pre;
+        while (len -- >= 0) {
+            pre = pre.next;
+        }
+        pre.next = null;
+        return cur;
+    }
+
+    // Correct Answer
+    public static ListNode rotateRight2(ListNode head, int k) {
+        ListNode temp = head;
+        ListNode cur = null;
+        ListNode prev = null;
+        int len = 1;
+
+        while (temp.next != null) {
+            temp = temp.next;
+            len ++;
+        }
+
+        temp.next = head;
+        int pos = len - k % len + 1;
+        cur = temp; // 记录原链表的tail
+
+        while (pos-- > 0) {
+            prev = cur;
+            cur = cur.next;
+        }
+
+        prev.next = null;
+        return cur;
+    }
+
+}
+
+// 相似题 数组
+/**
+ * 189. 轮转数组
+ * Link： https://leetcode.cn/problems/rotate-array/
+ */
+
+class rotate189 {
+    public static void main(String [] args) {
+        int [] nums = {1,2,3,4,5,6,7};
+        rotate(nums, 12);
+        for (int num: nums) {
+            System.out.println(num);
+        }
+    }
+    public static void rotate(int[] nums, int k) {
+        k %= nums.length;
+        System.out.println("k:" + k);
+        reverse(nums, 0, nums.length - 1);
+        reverse(nums, 0, k - 1);
+        reverse(nums, k, nums.length - 1);
+    }
+
+    private static void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+            start ++;
+            end --;
+        }
+    }
+}
